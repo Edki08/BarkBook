@@ -7,14 +7,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export default function AnimatedDog({ behavior = 'idle' }) {
   const glRef = useRef();
+  const mixerRef = useRef();
 
   useEffect(() => {
-    let scene, camera, renderer, mixer, clock;
+    let scene, camera, renderer, clock;
 
     async function initGL(gl) {
       const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
-      // Scene setup
       scene = new THREE.Scene();
       camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
       camera.position.z = 2;
@@ -22,12 +22,10 @@ export default function AnimatedDog({ behavior = 'idle' }) {
       renderer = new Renderer({ gl });
       renderer.setSize(width, height);
 
-      // Lighting
       const light = new THREE.DirectionalLight(0xffffff, 1);
       light.position.set(0, 1, 2).normalize();
       scene.add(light);
 
-      // Load dog model
       const asset = Asset.fromModule(require('../assets/models/dog.glb'));
       await asset.downloadAsync();
       const loader = new GLTFLoader();
@@ -36,19 +34,24 @@ export default function AnimatedDog({ behavior = 'idle' }) {
       });
 
       scene.add(model.scene);
-      mixer = new THREE.AnimationMixer(model.scene);
+      const mixer = new THREE.AnimationMixer(model.scene);
+      mixerRef.current = mixer;
       clock = new THREE.Clock();
 
-      // Play first animation
-      if (model.animations && model.animations.length) {
-        const action = mixer.clipAction(model.animations[0]);
+      // Choose animation by behavior (e.g., idle, dance)
+      let action;
+      if (model.animations.length > 0) {
+        const selectedAnim = behavior === 'dance' && model.animations[1]
+          ? model.animations[1]
+          : model.animations[0];
+        action = mixer.clipAction(selectedAnim);
         action.play();
       }
 
       const animate = () => {
         requestAnimationFrame(animate);
         const delta = clock.getDelta();
-        if (mixer) mixer.update(delta);
+        mixer.update(delta);
         renderer.render(scene, camera);
         gl.endFrameEXP();
       };
@@ -61,5 +64,5 @@ export default function AnimatedDog({ behavior = 'idle' }) {
     }
   }, [behavior]);
 
-  return <GLView style={{ flex: 1, height: 300 }} ref={glRef} onContextCreate={initGL} />;
+  return <GLView style={{ flex: 1, height: 300 }} ref={glRef} />;
 }
