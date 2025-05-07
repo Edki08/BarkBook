@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AnimatedDog from '../components/AnimatedDog';
 
 export default function IndexScreen() {
   const navigation = useNavigation();
@@ -12,7 +13,12 @@ export default function IndexScreen() {
     >
       <View style={styles.container}>
         <Text style={styles.title}>Welcome to BarkBook!</Text>
-        <Text style={styles.subtitle}>Sniff. Wag. Repeat. Let's Wag On!</Text>
+        <Text style={styles.subtitle}>Sniff. Wag. Repeat. Let’s Wag On!</Text>
+
+        <View style={styles.dogContainer}>
+          <AnimatedDog behavior="idle" />
+        </View>
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('Login')}
@@ -46,8 +52,13 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     color: '#17252A',
-    marginBottom: 40,
+    marginBottom: 20,
     textAlign: 'center',
+  },
+  dogContainer: {
+    height: 300,
+    width: '100%',
+    marginBottom: 30,
   },
   button: {
     backgroundColor: '#FF8C42',
