@@ -16,7 +16,7 @@ export default function IndexScreen() {
         <Text style={styles.subtitle}>Sniff. Wag. Repeat. Let’s Wag On!</Text>
 
         <View style={styles.dogContainer}>
-          <AnimatedDog behavior="idle" />
+        <AnimatedDog behavior="dance" />
         </View>
 
         <TouchableOpacity
