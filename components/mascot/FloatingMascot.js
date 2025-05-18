@@ -1,16 +1,14 @@
-import React, { useEffect, useRef } from 'react';
 import { GLView } from 'expo-gl';
 import { Renderer } from 'expo-three';
 import * as THREE from 'three';
+import { Asset } from 'expo-asset';
+import * as FileSystem from 'expo-file-system';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import dogAsset from '../../assets/models/dogAsset';
+import React, { useEffect, useRef } from 'react';
 
 export default function FloatingMascot() {
-  const rotateRef = useRef(0);
-
   const onContextCreate = async (gl) => {
     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
-
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 2;
@@ -22,11 +20,13 @@ export default function FloatingMascot() {
     light.position.set(0, 0, 2).normalize();
     scene.add(light);
 
-    await dogAsset.downloadAsync();
+    // Load the GLB file manually
+    const modelAsset = Asset.fromModule(require('../../assets/models/dog.glb'));
+    await modelAsset.downloadAsync();
 
     const loader = new GLTFLoader();
     loader.load(
-      dogAsset.uri,
+      modelAsset.localUri || modelAsset.uri,
       (gltf) => {
         const model = gltf.scene;
         model.scale.set(1.5, 1.5, 1.5);
@@ -42,7 +42,7 @@ export default function FloatingMascot() {
       },
       undefined,
       (error) => {
-        console.error('Failed to load GLB:', error);
+        console.error('GLB Load Error:', error);
       }
     );
   };

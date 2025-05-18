@@ -1,20 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import HomeScreen from './app/HomeScreen';
+import AddHealthLogScreen from './app/AddHealthLogScreen';
+import HealthLogScreen from './app/HealthLogScreen';
+import AddMealLogScreen from './app/AddMealLogScreen';
+import MealLogScreen from './app/MealLogScreen';
+import AddWalkLogScreen from './app/AddWalkLogScreen';
+import WalkLogScreen from './app/WalkLogScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AddHealthLog" component={AddHealthLogScreen} />
+        <Stack.Screen name="HealthLog" component={HealthLogScreen} />
+        <Stack.Screen name="AddMealLog" component={AddMealLogScreen} />
+        <Stack.Screen name="MealLog" component={MealLogScreen} />
+        <Stack.Screen name="AddWalkLog" component={AddWalkLogScreen} />
+        <Stack.Screen name="WalkLog" component={WalkLogScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

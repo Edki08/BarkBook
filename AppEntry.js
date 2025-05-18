@@ -12,7 +12,7 @@ import WalkLogScreen from './app/WalkLogScreen';
 
 const Stack = createNativeStackNavigator();
 
-export default function App() {
+export default function AppEntry() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
